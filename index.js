@@ -14,11 +14,11 @@ async function getCharacters() {
 //      const URL = "https://swapi.dev/api/people/";
 //     return   axios.get(URL)
 // }
-// getCharacters().then((response) => {
-//     console.log(response.data)
-// }).catch((error) => {
-//     console.log(error)
-// })
+getCharacters().then((response) => {
+    console.log(response.data)
+}).catch((error) => {
+    console.log(error)
+})
 
 app.get('/', (req, res) => {
     return res.send(getCharacters())
