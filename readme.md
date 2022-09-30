@@ -112,7 +112,7 @@ I would like to thank Woztell for this opportunity.
 
 - Navbar with links to pages for spaceships, planets etc
 
-- intergration of the extra character into the API.
+- Intergration of the extra character into the API.
 
 
 ## Author
