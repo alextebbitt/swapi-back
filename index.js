@@ -9,18 +9,29 @@ app.use(express.json())
 app.use(cors());
 let cacheCharactersByPage = {};
 async function getCharacters(page) {
-    if (page === undefined) {
+    if (!page) {
         page = 1;
     }
-    let response = cacheCharactersByPage[page];
-    if(!response) {
-        response = await axios.get(`https://swapi.dev/api/people/?page=${page}`);
-        cacheCharactersByPage[page] = response;
+    let characters = cacheCharactersByPage[page];
+    if (!characters) {
+        try {
+            var response = await axios.get(`https://swapi.dev/api/people/?page=${page}`);
+                characters = response?.data?.results;
+
+            if (characters?.length < 10) {
+                characters.push(parsedJSON);
+            }
+            cacheCharactersByPage[page] = characters;
+        }
+        catch {
+            console.error(error)
+        }
     }
-    return response;
+    return characters;
 }
 
 async function searchById(req) {
+    console.log("search by id")
     try {
         const response = await axios.get(`https://swapi.dev/api/people/${req.params.id}`);
         return response
@@ -42,10 +53,10 @@ async function searchByName(name) {
 
 app.get('/characters/:page', async (req, res) => {
     let results = await getCharacters(req.params.page);
-    return res.send(results.data)
+    return res.send(results)
 });
 
-app.get('/:id', async (request, res) => {
+app.get('search/:id', async (request, res) => {
     let results = await searchById(request);
     return res.send(results.data)
 });
@@ -56,4 +67,4 @@ app.get('/search/:name', async (req, res) => {
     return res.send(results.data)
 });
 
-app.listen(PORT, console.log(`Server running on port ${PORT}`));
+app.listen(PORT, console.log(`Server running on port ${ PORT }`));
