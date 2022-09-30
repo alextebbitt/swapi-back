@@ -7,12 +7,16 @@ var parsedJSON = require('./extra_character.json');
 const cors = require("cors");
 app.use(express.json())
 app.use(cors());
-
+let cacheCharactersByPage = {};
 async function getCharacters(page) {
     if (page === undefined) {
         page = 1;
     }
-    const response = await axios.get(`https://swapi.dev/api/people/?page=${page}`);
+    let response = cacheCharactersByPage[page];
+    if(!response) {
+        response = await axios.get(`https://swapi.dev/api/people/?page=${page}`);
+        cacheCharactersByPage[page] = response;
+    }
     return response;
 }
 
